@@ -13,3 +13,14 @@ CREATE TABLE user(
 
 
 INSERT INTO user(name,contactNumber,email,password,role)value ('Anant Yadav','9795897359','anantkumary9@gmail.com','12345','ADMIN')
+
+
+
+
+-- create table category---------
+
+
+CREATE TABLE category (
+    id int not null primary key AUTO_INCREMENT,
+    name VARCHAR(250) UNIQUE
+)
