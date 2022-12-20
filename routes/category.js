@@ -10,9 +10,8 @@ const auth = require('../services/authentication')
 
 
 // add category---- which is only allow to admin 
-router.post('/add', auth.authenticateToken, checkRole, async (req, res) => {
+router.post('/add', auth.authenticateToken, async (req, res) => {
   try {
-
     let body = req.body;
     let query = `INSERT INTO category (name) value ('${body.name}')`
     let [result, fields] = await cafePool.query(query);
@@ -44,11 +43,11 @@ router.get('/get', auth.authenticateToken, async (req, res) => {
 
 // update category which is also by only admin--
 
-router.patch('/update', auth.authenticateToken, checkRole, async (req, res) => {
+router.patch('/update', auth.authenticateToken, async (req, res) => {
   try {
 
     let body = req.body;
-    let query = `update category set name = ${body.name} where id = ${body.id}`
+    let query = `update category set name = '${body.name}' where id = ${body.id}`
     let [result, fields] = await cafePool.query(query);
     if (result.affectedRows == 0) {
       return res.status(404).json({ message: "category not exists" })
@@ -61,5 +60,5 @@ router.patch('/update', auth.authenticateToken, checkRole, async (req, res) => {
   }
 })
 
-
+module.exports = router
 
