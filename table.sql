@@ -24,3 +24,16 @@ CREATE TABLE category (
     id int not null primary key AUTO_INCREMENT,
     name VARCHAR(250) UNIQUE
 )
+
+
+-- create table product------
+
+
+CREATE TABLE product(
+    id int not null primary key AUTO_INCREMENT,
+    name VARCHAR(255) not null,
+    categoryId int not null,
+    description text,
+    price integer,
+    status ENUM('ACTIVE','INACTIVE')DEFAULT 'ACTIVE'
+);
