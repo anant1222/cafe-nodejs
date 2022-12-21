@@ -6,21 +6,24 @@ const router = express.Router();
 const nodemailer = require('nodemailer')
 const checkRole = require('../services/checkRole')
 const auth = require('../services/authentication')
+const initModels = require('../models/init-models')
+const sequlize = require('../utils/db-connection').cafePool
+const models = initModels(sequlize)
 
 
-router.post('/add',auth.authenticateToken,async (req,res)=>{
+router.post('/add', auth.authenticateToken, async (req, res) => {
   try {
-  let body = req.body;
-  let insertQuery = `INSERT INTO product (name,categoryId,description,price)
+    let body = req.body;
+    let insertQuery = `INSERT INTO product (name,categoryId,description,price)
    values ('${body.name}',${body.categoryId},'${body.description}','${body.price}')`
-   let [result, fields] = await cafePool.query(insertQuery);
-   if (result) {
-     return res.status(200).json({
-       message: "product success added",
-     });
-   } else {
-     return res.status(200).json(result);
-   }
+    let [result, fields] = await cafePool.query(insertQuery);
+    if (result) {
+      return res.status(200).json({
+        message: "product success added",
+      });
+    } else {
+      return res.status(200).json(result);
+    }
   } catch (error) {
     return res.status(500).json(result);
   }
@@ -29,9 +32,75 @@ router.post('/add',auth.authenticateToken,async (req,res)=>{
 
 router.get('/get', auth.authenticateToken, async (req, res) => {
   try {
-    let query = `select pt.id, pt.name,pt.description,pt.price,pt.status,ctg.name,ctg.id from product as pt  join category as ctg on category.id = product.categoryId`
+    // let query = `select pt.id, pt.name,pt.description,pt.price,pt.status,ctg.name as categoryName,ctg.id as categoryId from product as pt  join category as ctg on ctg.id = pt.categoryId`
+    // let [result, fields] = await cafePool.query(query);
+    let ress = await models.product.findAll({ raw: true })
+    res.status(200).json({ message: "success", data: ress })
+    return
+  } catch (error) {
+    res.status(500).json({ error: error })
+  }
+})
+
+router.get('/getCategoryById/:id', auth.authenticateToken, async (req, res) => {
+  try {
+    let params = req.params
+    let query = `select pt.id, pt.name,pt.description,pt.price,pt.status,ctg.name as categoryName,ctg.id as categoryId from product as pt  join category as ctg on ctg.id = pt.categoryId where pt.categoryId=${params.id}`
     let [result, fields] = await cafePool.query(query);
-    res.status(200).json({ message: "success", data: result })
+    res.status(200).json({ message: "success", data: result[0] })
+    return
+  } catch (error) {
+    res.status(500).json({ error: error })
+  }
+})
+
+router.get('/getById/:id', auth.authenticateToken, async (req, res) => {
+  try {
+    let params = req.params
+    let query = `select pt.id, pt.name,pt.description,pt.price,pt.status,ctg.name as categoryName,ctg.id as categoryId from product as pt  join category as ctg on ctg.id = pt.categoryId where pt.id=${params.id}`
+    let [result, fields] = await cafePool.query(query);
+    res.status(200).json({ message: "success", data: result[0] })
+    return
+  } catch (error) {
+    res.status(500).json({ error: error })
+  }
+})
+
+router.patch('/update', auth.authenticateToken, async (req, res) => {
+  try {
+    let body = req.body
+    let query = {
+      where: {
+        id: body.id
+      }
+    }
+    let attribute = {};
+    if (body.name) {
+      attribute.name = body.package_name
+    }
+    if (body.description) {
+      attribute.description = body.description
+    }
+    if (body.price) {
+      attribute.price = body.price
+    }
+    if (body.status) {
+      attribute.status = body.status
+    }
+    let updateData = await models.product.update(attribute, query)
+    res.status(200).json({ message: "success", data: result[0] })
+    return
+  } catch (error) {
+    res.status(500).json({ error: error })
+  }
+})
+
+router.delete('/delete/:id', auth.authenticateToken, async (req, res) => {
+  try {
+    let params = req.params
+    let query = `delete from user where id = ${params.id}`
+    let [result, fields] = await cafePool.query(query);
+    res.status(200).json({ message: "success", data: {} })
     return
   } catch (error) {
     res.status(500).json({ error: error })
