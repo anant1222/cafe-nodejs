@@ -37,3 +37,21 @@ CREATE TABLE product(
     price integer,
     status ENUM('ACTIVE','INACTIVE')DEFAULT 'ACTIVE'
 );
+
+
+-- create table bill---
+
+CREATE TABLE bill (
+    id int not null primary key AUTO_INCREMENT,
+    uuid VARCHAR(255) not null,
+    name VARCHAR(255) not null,
+    email VARCHAR(255) not null,
+    contactNumber VARCHAR(20) NOT NULL,
+    paymentMethod VARCHAR(50) not null,
+    total int not null,
+    productDetails JSON DEFAULT NULL,
+    createdBy VARCHAR(255) not null
+);
+
+
+ALTER TABLE bill
