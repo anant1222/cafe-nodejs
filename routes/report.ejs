@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <style>
+            table{
+                font-family: sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+            td,th{
+                border: 1px solid #dddd;
+                text-align: left;
+                padding: 8px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h3 style="text-align:center">Cafe managemant System</h3>
+        <table>
+            <tr>
+                <th>Name: <%= name%></th>
+                <th>Email: <%= email%></th>
+            </tr>
+            <tr>
+                <th>Contact Number: <%= contactNumber%></th>
+                <th>Payment Method: <%= paymentMethod%></th>
+            </tr>
+        </table>
+        <h3>Product Details</h3>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Quantite</th>
+                <th>Price</th>
+                <th>Sub Total</th>
+            </tr>
+            <% if(productDetails.length > 0) { %>
+            <% productDetails.forEach(product =>{ %>
+                <tr><%= product.name%></tr>
+                <tr><%= product.category%></tr>
+                <tr><%= product.quentity%></tr>
+                <tr><%= product.price%></tr>
+                <tr><%= product.total%></tr>
+
+                <%});%>
+                <%}%>
+        </table>
+        <h3>Total: <%= totalAmount%></h3>
+         <h3>Thanku for visiting here..</h3>
+    </body>
+</html>

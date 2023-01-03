@@ -9,5 +9,6 @@ app.use(express.json());
 app.use('/user',router.userRouter)
 app.use('/category',router.categoryRouter)
 app.use('/product',router.ProductRouter)
+app.use('/bill',router.billRouter)
 
 module.exports = app;

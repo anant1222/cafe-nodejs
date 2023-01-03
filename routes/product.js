@@ -107,5 +107,24 @@ router.delete('/delete/:id', auth.authenticateToken, async (req, res) => {
   }
 })
 
+router.patch('/updateStatus', auth.authenticateToken, async (req, res) => {
+  try {
+    let body = req.body
+    let query = {
+      where: {
+        id: body.id
+      }
+    }
+    if (body.status) {
+      attribute.status = body.status
+    }
+    let updateData = await models.product.update(attribute, query)
+    res.status(200).json({ message: "success", data: {} })
+    return
+  } catch (error) {
+    res.status(500).json({ error: error })
+  }
+})
+
 module.exports = router
 
